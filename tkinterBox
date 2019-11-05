@@ -10,35 +10,27 @@ win = Tk()
 win.title("GUI Sandbox")
 win.geometry("800x500")
 now_date = datetime.date.today().strftime('%d%b%y').upper()
-now_hour = time.localtime().tm_hour
-now_min = time.localtime().tm_min
-now_sec = time.localtime().tm_sec
-# Multiple log_timestamp var tries below, see def get_log_timestamp() below for concatenation attempts
-# log_timestamp = datetime.datetime.combine(datetime.date.today(), datetime.time)
+now_hour = str(time.localtime().tm_hour)
+now_min = str(time.localtime().tm_min)
 
 ################################################
 
 
 def doNothing_image():
-    print(now_date + ':' + ' ' + 'Okay, okay, I won\'t insert your image...')
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'Okay, okay, I won\'t insert your image...')
 
 
 def doNothing_print():
-    print(now_date + ':' + ' ' + 'Okay, okay, I won\'t print for you...')
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'Okay, okay, I won\'t print for you...')
 
 
 def doNothing():
-    print(now_date + ':' + ' ' + 'Okay, okay, I won\'t...')
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'Okay, okay, I won\'t...')
+
 
 # Prints log when status bar combobox is adjusted by user
 def getstatusformatFunc(event):
-    print(now_date + ':' + ' ' + 'The status bar has been reformatted')
-
-
-# def get_log_timestamp():
-# Attempt to format the output of this def to str so def getstatusformatFunc(event):
-# would actually produce custom timestamp (HHMMSSL after the date) when line 106 combobox is executed
-# print.str.format(now_date + ' ' + now_hour + now_min + now_sec + 'L:' + 'Status bar format updated')
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'The status bar has been reformatted to ' + statusOptionDropdown.get().lower())
 
 ################################################
 # Establish Menu: Tkinter already knows to put the menu at the top of the program
@@ -102,7 +94,7 @@ toolbar.pack(side=TOP, fill=X)
 status = Label(win, text='Preparing to do nothing...', bd=1, relief=SUNKEN, anchor=W)
 status.pack(side=BOTTOM, fill=X)
 
-statusOptionDropdown = ttk.Combobox(status, values=['SUNKEN',
+statusOptionDropdown = ttk.Combobox(status, width="10", values=['SUNKEN',
 'RAISED',
 'FLAT',
 'GROOVE',
