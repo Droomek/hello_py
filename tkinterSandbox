@@ -1,10 +1,10 @@
-
-
 from tkinter import *
 import tkinter.messagebox
 from tkinter import ttk
 import datetime
 import time
+# added by COSA141
+from time import strftime
 
 win = Tk()
 win.title("GUI Sandbox")
@@ -28,7 +28,7 @@ def doNothing_print():
 
 
 def doNothing():
-        print(now_date + ':' + ' ' + 'Okay, okay, I won\'t...')
+    print(now_date + ':' + ' ' + 'Okay, okay, I won\'t...')
 
 # Prints log when status bar combobox is adjusted by user
 def getstatusformatFunc(event):
@@ -36,9 +36,9 @@ def getstatusformatFunc(event):
 
 
 # def get_log_timestamp():
-    # Attempt to format the output of this def to str so def getstatusformatFunc(event):
-    # would actually produce custom timestamp (HHMMSSL after the date) when line 106 combobox is executed
-    # print.str.format(now_date + ' ' + now_hour + now_min + now_sec + 'L:' + 'Status bar format updated')
+# Attempt to format the output of this def to str so def getstatusformatFunc(event):
+# would actually produce custom timestamp (HHMMSSL after the date) when line 106 combobox is executed
+# print.str.format(now_date + ' ' + now_hour + now_min + now_sec + 'L:' + 'Status bar format updated')
 
 ################################################
 # Establish Menu: Tkinter already knows to put the menu at the top of the program
@@ -64,7 +64,7 @@ editMenu.add_command(label='Redo', command=doNothing)
 # Drop down 3 / Help
 
 def openAbout():
-    tkinter.messagebox.showinfo('About Tkinter Sandbox', '''Welcome to the Tkinter Sandbox! This program is being built to hold and practice 
+    tkinter.messagebox.showinfo('About Tkinter Sandbox', '''Welcome to the Tkinter Sandbox! This program is being built to hold and practice
 Python GUI techniques and any other Python features of interest.''')
     print(log_datetime + ' Opened \'About\' Modal from help menu')
 
@@ -96,23 +96,34 @@ printButt.pack(side=LEFT, padx=2, pady=2)
 
 toolbar.pack(side=TOP, fill=X)
 
-
 ################################################
 # Status Bar
 
-status = Label(win, text='Preparing  to do nothing...', bd=1, relief=SUNKEN, anchor=W)
+status = Label(win, text='Preparing to do nothing...', bd=1, relief=SUNKEN, anchor=W)
 status.pack(side=BOTTOM, fill=X)
 
 statusOptionDropdown = ttk.Combobox(status, values=['SUNKEN',
-                                                    'RAISED',
-                                                    'FLAT',
-                                                    'GROOVE',
-                                                    'RIDGE'])
+'RAISED',
+'FLAT',
+'GROOVE',
+'RIDGE'])
 
 statusOptionDropdown.current(0)
 statusOptionDropdown.pack(side=RIGHT, padx=2, pady=2)
 statusOptionDropdown.bind("<<ComboboxSelected>>", getstatusformatFunc)
 
+################################################
+
+# COSA141's code: for displaying a clock on App
+def time():
+    string = strftime('%H:%M %p') # only doing minutes not seconds
+    lbl.config(text=string)
+    lbl.after(1000, time) # so it refreshes
+
+    lbl = Label(toolbar,background = 'black',foreground = 'white')
+    lbl.pack(side=RIGHT)
+
+    time()
 ################################################
 
 win.mainloop()
