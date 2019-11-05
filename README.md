@@ -1,5 +1,5 @@
 # helloPy
-This repository is a personal collection of practice projects. The tkinter sandbox will contain most of the functionaliy behind python as I go through different mods. 
+This repository is a personal collection of practice projects. The tkinter sandbox will contain most of the functionality behind python as I go through different mods. 
 
 Sources:
 Programming Knowledge: https://www.youtube.com/channel/UCs6nmQViDpUw0nuIx9c_WvA
