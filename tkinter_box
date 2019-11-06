@@ -1,0 +1,130 @@
+#
+#
+#
+#
+
+from tkinter import *
+import tkinter.messagebox
+from tkinter import ttk
+import datetime
+import time
+# added by COSA141
+from time import strftime
+# End COSA141's code
+
+
+win = Tk()
+win.title("GUI Sandbox")
+win.geometry("800x500")
+now_date = datetime.date.today().strftime('%d%b%y').upper()
+now_hour = str(time.localtime().tm_hour)
+now_min = str(time.localtime().tm_min)
+
+# Functions Start
+
+
+def do_nothing_image():
+    """Prints custom timestamp with text for system logging purposes"""
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'Okay, okay, I won\'t insert your image...')
+
+
+def do_nothing_print():
+    """Prints custom timestamp with text for system logging purposes"""
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'Okay, okay, I won\'t print for you...')
+
+
+def do_nothing():
+    """Prints custom timestamp with text for system logging purposes"""
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'Okay, okay, I won\'t...')
+
+
+def get_status_format_func(event):
+    """Prints custom timestamp with name of combobox selected for system logging purposes"""
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'The status bar has been reformatted to ' +
+          statusOptionDropdown.get().lower())
+
+# Establish Menu: Tkinter already knows to put the menu at the top of the program
+
+
+menu = Menu(win)
+win.config(menu=menu)
+
+# Drop down 1
+subMenu = Menu(menu)
+menu.add_cascade(label='File', menu=subMenu)
+subMenu.add_command(label='New Project...', command=do_nothing)
+subMenu.add_command(label='New...', command=do_nothing)
+subMenu.add_separator()
+subMenu.add_command(label='Exit', command=win.quit)
+
+# Drop down 2 / Edit
+editMenu = Menu(menu)
+menu.add_cascade(label='Edit', menu=editMenu)
+editMenu.add_command(label='Redo', command=do_nothing)
+
+# Drop down 3 / Help
+
+
+def open_about():
+    """Opens tkinter.messagebox modal and prints custom timestamp with text for system logging purposes"""
+    tkinter.messagebox.showinfo('About Tkinter Sandbox', '''Welcome to the Tkinter Sandbox! This 
+program is being built to hold and practice Python GUI techniques and any other Python features 
+of interest.''')
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'Opened about modal from help menu')
+
+
+def open_references():
+    """Opens tkinter.messagebox modal and prints custom timestamp with text for system logging purposes"""
+    tkinter.messagebox.showinfo('Tkinter Youtube Channels', '''Programming Knowledge
+Python Codex
+Corey Schafer
+The New Boston
+sentdex''')
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'Opened references modal from help menu')
+
+
+editMenu = Menu(menu)
+menu.add_cascade(label='Help', menu=editMenu)
+editMenu.add_command(label='About', command=open_about)
+editMenu.add_command(label='References', command=open_references)
+
+# Toolbar
+toolbar = Frame(win, bg='black')
+
+# Insert Image Button
+insertButt = Button(toolbar, text='Insert Image', command=do_nothing_image)
+insertButt.pack(side=LEFT, padx=2, pady=2)
+
+# Print Button
+printButt = Button(toolbar, text='Print', command=do_nothing_print)
+printButt.pack(side=LEFT, padx=2, pady=2)
+toolbar.pack(side=TOP, fill=X)
+
+# Status Bar
+status = Label(win, text='Preparing to do nothing...', bd=1, relief=SUNKEN, anchor=W)
+status.pack(side=BOTTOM, fill=X)
+
+# Combobox
+statusOptionDropdown = ttk.Combobox(status, width="10", values=['SUNKEN', 'RAISED', 'FLAT', 'GROOVE', 'RIDGE'])
+
+statusOptionDropdown.current(0)
+statusOptionDropdown.pack(side=RIGHT, padx=2, pady=2)
+statusOptionDropdown.bind("<<ComboboxSelected>>", get_status_format_func)
+
+# COSA141's code: for displaying a clock on App
+
+
+def time():
+    string = strftime('%H:%M %p')  # only doing minutes not seconds
+    lbl.config(text=string)
+    lbl.after(1000, time)  # so it refreshes
+
+    lbl = Label(toolbar, background='black', foreground='white')
+    lbl.pack(side=RIGHT)
+
+    time()
+
+# End COSA141's code
+
+
+win.mainloop()
