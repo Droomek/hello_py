@@ -7,3 +7,5 @@ Sources:
 - [Corey Schafer](https://www.youtube.com/channel/UCCezIgC97PvUuR4_gbFUs5g)
 - [The New Boston](https://www.youtube.com/user/thenewboston)
 - [sentdex](https://www.youtube.com/channel/UCfzlCWGWYyIQ0aLC5w48gBQ)
+
+*** tkinterbox is the master file, all other .pys will at some point be migrated in ***
