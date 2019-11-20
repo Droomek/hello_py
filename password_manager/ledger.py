@@ -12,8 +12,8 @@ from time import strftime
 
 window = Tk()
 window.title("Password Manager")
-window.geometry('600x400')
-now_date = datetime.date.today().strftime('%d%b%y').upper()
+window.geometry('800x400')
+now_date = str(datetime.date.today().strftime('%d%b%y').upper())
 now_hour = str(time.localtime().tm_hour)
 now_min = str(time.localtime().tm_min)
 
@@ -31,19 +31,48 @@ def view_command():
 
 def search_command():
     lb.delete(0,END)
-    for row in ledger_bk.search(name=name.get(),user=user.get(),password=password.get(),category=category.get()):
+    for row in ledger_bk.search(name=name.get(),user=user.get(),password=password.get(),category=category.get(),url=url.get()):
         lb.insert(END,row)
     print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'User searched records')
+
 
 def add_command():
     # print(get_date)
     ledger_bk.add(name.get(),user.get(),password.get(),category.get(),url.get())
     lb.delete(0,END)
-    lb.insert(END,name.get(),user.get(),password.get(),category.get(),url.get())
+    lb.insert(END,name.get())
+    lb_2.insert(END, user.get(), password.get(), category.get(), url.get())
+    e1.delete(0,END)
+    e2.delete(0,END)
+    e3.delete(0,END)
+    e4.delete(0,END)
+    e5.delete(0,END)
     print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'User added a record')
 
 
 def get_selected_row(event):
+    # Fills all entries
+    try:
+        global selected_tuple
+        index=lb.curselection()[0]
+        selected_tuple = lb.get(index)
+        e1.delete(0,END)
+        e1.insert(END,selected_tuple[1])
+        e2.delete(0,END)
+        e2.insert(END,selected_tuple[2])
+        e3.delete(0,END)
+        e3.insert(END,selected_tuple[3])
+        e4.delete(0,END)
+        e4.insert(END,selected_tuple[4])
+        e5.delete(0,END)
+        e5.insert(END,selected_tuple[5])
+        lb_2.delete(0,END)
+        lb_2.insert(END, user.get(), password.get(), category.get(), url.get())
+    except IndexError:
+        pass
+
+
+def get_selected_metadata(event):
     # Fills all entries
     try:
         global selected_tuple
@@ -79,12 +108,13 @@ def delete_command():
 
 def clear_command():
     lb.delete(0,END)
+    lb_2.delete(0, END)
     e1.delete(0,END)
     e2.delete(0,END)
     e3.delete(0,END)
     e4.delete(0,END)
     e5.delete(0,END)
-    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'User cleared all records from listbox')
+    print(now_date + ' ' + now_hour + now_min + ':' + ' ' + 'User cleared all records from GUI')
 
 
 l1 = Label(window,text="Name")
@@ -98,23 +128,23 @@ l4.grid(row=3,column=0, sticky=E)
 l5 = Label(window,text="URL")
 l5.grid(row=4,column=0, sticky=E)
 
-name=StringVar()
+name = StringVar()
 e1 = ttk.Entry(window,textvariable=name,width=25)
 e1.grid(row=0,column=2,columnspan=10, sticky=W)
 
-user=StringVar()
+user = StringVar()
 e2 = ttk.Entry(window,textvariable=user,width=25)
 e2.grid(row=1,column=2,columnspan=10, sticky=W)
 
-password=StringVar()
+password = StringVar()
 e3 = ttk.Entry(window,textvariable=password,width=25)
 e3.grid(row=2,column=2,columnspan=10, sticky=W)
 
-category=StringVar()
+category = StringVar()
 e4 = ttk.Entry(window,textvariable=category,width=25)
 e4.grid(row=3,column=2,columnspan=10, sticky=W)
 
-url=StringVar()
+url = StringVar()
 e5 = ttk.Entry(window,textvariable=url,width=25)
 e5.grid(row=4,column=2,columnspan=10, sticky=W)
 
@@ -133,11 +163,12 @@ b4.grid(row=9,column=0, padx=10)
 b5 = ttk.Button(window,text="Delete",width=12,command=delete_command)
 b5.grid(row=10,column=0, padx=10)
 
-b6 = ttk.Button(window,text="Close",width=12, command=window.destroy)
+b6 = ttk.Button(window,text="Clear All",width=12,command=clear_command)
 b6.grid(row=11,column=0, padx=10)
 
-b7 = ttk.Button(window,text="Clear All",width=12,command=clear_command)
+b7 = ttk.Button(window,text="Close",width=12, command=window.destroy)
 b7.grid(row=12,column=0, padx=10)
+
 
 # # Combobox for email service
 # email_service_chooser = ttk.Combobox(window, width="10", values=['gmail', 'outlook', 'aol', 'icloud', 'mail'])
@@ -151,13 +182,18 @@ b7.grid(row=12,column=0, padx=10)
 # email_domain_chooser.grid(row=1,column=6)
 # # End Combobox
 
-lb=Listbox(window,height=10,width=30)
-lb.grid(row=6,column=2,columnspan=3,rowspan=8, pady=10)
+# listbox_1
+lb = Listbox(window,height=10,width=30)
+lb.grid(row=6,column=2,rowspan=8, pady=10)
 
 sb = Scrollbar(window)
 sb.grid(row=6,column=1,rowspan=8, padx=5)
 lb.configure(yscrollcommand=sb.set)
 sb.configure(command=lb.yview)
+
+# listbox_2
+lb_2 = Listbox(window,height=10,width=30)
+lb_2.grid(row=6,column=4,columnspan=6,rowspan=8, pady=10)
 
 lb.bind('<<ListboxSelect>>',get_selected_row)
 window.mainloop()

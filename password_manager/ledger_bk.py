@@ -4,7 +4,7 @@ import sqlite3
 def create():
     con = sqlite3.connect("aledger.db")
     cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS account(id INTEGER PRIMARY KEY,name TEXT,user TEXT, password TEXT,category TEXT,cdate TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS account(id INTEGER PRIMARY KEY,name TEXT,user TEXT, password TEXT,category TEXT,url TEXT)")
     con.commit()
     con.close()
 
@@ -12,7 +12,7 @@ def create():
 def viewall():
     con = sqlite3.connect("aledger.db")
     cur = con.cursor()
-    cur.execute("SELECT name FROM account")
+    cur.execute("SELECT * FROM account")
     rows = cur.fetchall()
     con.close()
     return rows
@@ -21,24 +21,24 @@ def viewall():
 def search(name="",user="",password="",category=""):
     con = sqlite3.connect("aledger.db")
     cur = con.cursor()
-    cur.execute("SELECT * FROM account WHERE name=? OR user=? OR password=? OR category=?",(name,user,password,category))
+    cur.execute("SELECT * FROM account WHERE name=? OR user=? OR password=? OR category=? OR url=?",(name,user,password,category,cdate))
     rows = cur.fetchall()
     con.close()
     return rows
 
 
-def add(name,user,password,category,cdate):
+def add(name,user,password,category,url):
     con = sqlite3.connect("aledger.db")
     cur = con.cursor()
-    cur.execute("INSERT INTO account VALUES(NULL,?,?,?,?,?)",(name,user,password,category,cdate))
+    cur.execute("INSERT INTO account VALUES(NULL,?,?,?,?,?)",(name,user,password,category,url))
     con.commit()
     con.close()
 
 
-def update(id,name,user,password,category,cdate):
+def update(id,name,user,password,category,url):
     con = sqlite3.connect("aledger.db")
     cur = con.cursor()
-    cur.execute("UPDATE account SET name=?,user=?,password=?,category=?,cdate=? WHERE id=?",(name,user,password,category,cdate,id))
+    cur.execute("UPDATE account SET name=?,user=?,password=?,category=?,url=? WHERE id=?",(name,user,password,category,url,id))
     con.commit()
     con.close()
 
