@@ -1,5 +1,6 @@
 # Simple password manager system
-# Borrowed from Martial Himanshu for personal learning purposes.  All rights reserved by Martial Himanshu for initial build.
+# Borrowed from Martial Himanshu for personal learning purposes.
+# All rights reserved by Martial Himanshu for initial build.
 # Developed By: Lucas Carlson: https://github.com/lucascrlsn
 
 from tkinter import *
@@ -9,7 +10,10 @@ import tkinter.messagebox
 import datetime
 import time
 import pyperclip
+import csv
 from time import strftime, ctime, gmtime
+import os.path
+from os import path
 
 window = Tk()
 window.title("Password Manager")
@@ -18,6 +22,12 @@ window.geometry('800x400')
 window.config(bg='light grey', highlightcolor='red', highlightthickness=5, highlightbackground='black', relief='sunken',
               borderwidth=5, pady=8)
 toolbar = Frame(window, bg='black')
+d = datetime.date.today().strftime("%d%b%y").upper()
+
+
+def get_log_filename():
+    # Use current date to get a text file name.
+    return 'session_log_' + d + '.csv'
 
 
 def copy_password():
@@ -25,24 +35,53 @@ def copy_password():
     p = e3.get()  # Current password in e3 password entry widget
     n = e1.get()  # Current name off account password belongs to in e1 entry widget
     pyperclip.copy(p)
-    print(datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")), print(
-        ' ' + '|' + ' ' + 'User copied the' + ' ' + n + ' ' + 'account password to the clipboard')
+    # Build/Execute System Log below
+    # Set Function ID Var
+    cp_id = str(id(view_command))
+    # Set Timestamp Var
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    # Print System Log
+    print(timestamp, '|', cp_id, '|', 'User copied the password for the', n, 'record')
 
 
 def view_command():
-    lb.delete(0,END)
-    lb_2.delete(0,END)
+    lb.delete(0, END)
+    lb_2.delete(0, END)
     for row in ledger_bk.viewall():
-        lb.insert(END,row)
-    print(datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")), print(' ' + '|' + ' ' + 'User viewed all records')
+        lb.insert(END, row)
+    # Build/Execute System Log below
+    # Set Function ID Var
+    vc_id = str(id(view_command))
+    # Set Timestamp Var
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    # Print System Log
+    print(timestamp, '|', vc_id, '|', 'User populated all records')
+    # with open(get_log_filename(), 'a') as csvfile_append:
+    #     fieldnames = ['Timestamp', 'Function ID', 'User Action']
+    #     writer_2 = csv.DictWriter(csvfile_append, fieldnames=fieldnames)
+    #     writer_2.writerow({'Timestamp': 'timestamp', 'User ID': 'vc_id', 'User Action': 'User populated all records'})
+
+
+def view_db_meta():
+    lb_2.delete(0, END)
+    lb.curselection()
+    for row in ledger_bk.view_meta():
+        lb.insert(END, row)
+    print(datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")), print(' ' + '|' + ' ' +
+                                                                                   'User viewed record metadata')
 
 
 def search_command():
     lb.delete(0,END)
-    for row in ledger_bk.search(name=name.get(),user=user.get(),password=password.get(),category=category.get(),url=url.get()):
+    for row in ledger_bk.search(name=name.get(), user=user.get(), password=password.get(), category=category.get(), url=url.get()):
         lb.insert(END,row)
-    print(datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")), print(' ' + '|' + ' ' +
-                                                                                   'User searched records')
+    # Build/Execute System Log below
+    # Set Function ID Var
+    sc_id = str(id(search_command))
+    # Set Timestamp Var
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    # Print System Log
+    print(timestamp, '|', sc_id, '|', 'User searched the db')
 
 
 def add_command():
@@ -56,15 +95,20 @@ def add_command():
     e3.delete(0,END)
     e4.delete(0,END)
     e5.delete(0,END)
-    print(datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")), print(' ' + '|' + ' ' +
-                                                                                   'User added a record')
+    # Build/Execute System Log below
+    # Set Function ID Var
+    ac_id = str(id(add_command))
+    # Set Timestamp Var
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    # Print System Log
+    print(timestamp, '|', ac_id, '|', 'User added a record')
 
 
 def get_selected_row(event):
     # Fills all entries
     try:
         global selected_tuple
-        index=lb.curselection()[0]
+        index = lb.curselection()[0]
         selected_tuple = lb.get(index)
         e1.delete(0,END)
         e1.insert(END,selected_tuple[1])
@@ -77,9 +121,18 @@ def get_selected_row(event):
         e5.delete(0,END)
         e5.insert(END,selected_tuple[5])
         lb_2.delete(0,END)
-        lb_2.insert(END, user.get(), password.get(), category.get(), url.get())
+        lb_2.insert(END, user.get(), category.get(), url.get())
     except IndexError:
         pass
+    # Build/Execute System Log below
+    # Set Function ID Var
+    gsr_id = str(id(get_selected_row))
+    # Set Selected Record Var
+    record = e1.get()
+    # Set Timestamp Var
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    # Print System Log
+    print(timestamp, '|', gsr_id, '|', 'User viewed', 'the', record, 'record')
 
 
 def get_selected_metadata(event):
@@ -115,11 +168,16 @@ def delete_command():
     tkinter.messagebox.askyesno(title='Alert', message='''Are you sure you want to delete this record? 
     This action cannot be undone.''')
     ledger_bk.delete(selected_tuple[0])
-    print(datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")), print(' ' + '|' + ' ' +
-                                                                                   'User deleted a record')
     lb.delete(0, END)
     for row in ledger_bk.viewall():
         lb.insert(END, row)
+    # Build/Execute System Log below
+    # Set Function ID Var
+    dc_id = str(id(delete_command))
+    # Set Timestamp Var
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    # Print System Log
+    print(timestamp, '|', dc_id, '|', 'User deleted a record')
 
 
 def clear_command():
@@ -130,8 +188,30 @@ def clear_command():
     e3.delete(0,END)
     e4.delete(0,END)
     e5.delete(0,END)
-    print(datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")), print(' ' + '|' + ' ' +
-                                                                                   'User cleared all records')
+    # Build/Execute System Log below
+    # Set Function ID Var
+    cc_id = str(id(clear_command))
+    # Set Timestamp Var
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    # Print System Log
+    print(timestamp, '|', cc_id, '|', 'User cleared all records from display')
+
+
+def gen_log():
+    # Generate Session Logging CSV
+    with open(get_log_filename(), 'w+') as csvfile:
+        writer_1 = csv.writer(csvfile)
+        writer_1.writerow(['Timestamp', 'Function ID', 'User Action'])
+
+
+if path.exists('session_log_' + d + '.csv'):
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    print(timestamp, '|', '0000000000', '|', 'Session Log File Detected')
+else:
+    gen_log()
+    gen_log_id = str(id(gen_log))
+    timestamp = datetime.datetime.strptime(time.ctime(), "%a %b %d %H:%M:%S %Y")
+    print(timestamp, '|', '0000000000', '|', 'No session log detected. Executing Def ID', gen_log_id, '...')
 
 
 l1 = Label(window,text="Name")
@@ -207,7 +287,7 @@ b8.grid(row=2,column=3, padx=10)
 # listbox_1
 lb = Listbox(window,height=10, width=30, highlightcolor='black', highlightthickness=3, exportselection=False)
 lb.grid(row=6,column=2,rowspan=8, pady=10)
-
+lb.bind('<<ListboxSelect>>', get_selected_row)
 sb = Scrollbar(window)
 sb.grid(row=7,column=1,rowspan=8, padx=5)
 lb.configure(yscrollcommand=sb.set)
@@ -217,5 +297,4 @@ sb.configure(command=lb.yview)
 lb_2 = Listbox(window, height=10, width=30, highlightcolor='black', highlightthickness=3, exportselection=False)
 lb_2.grid(row=6,column=3,columnspan=6,rowspan=8, pady=10)
 
-lb.bind('<<ListboxSelect>>',get_selected_row)
 window.mainloop()
