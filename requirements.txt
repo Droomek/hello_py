@@ -1,0 +1,3 @@
+library: datetime, time, itertools
+text editor
+python 3 or above
