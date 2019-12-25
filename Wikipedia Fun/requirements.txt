@@ -1,0 +1,3 @@
+library: wikipedia, pprint, datetime, time, colorama
+text editor
+python 3 or above
