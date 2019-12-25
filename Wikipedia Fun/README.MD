@@ -1,1 +1,1 @@
-- Testing out the (Wikipedia Package)[https://github.com/goldsmith/Wikipedia]
+- Testing out the [Wikipedia Package](https://github.com/goldsmith/Wikipedia)
